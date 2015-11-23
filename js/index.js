@@ -19,12 +19,22 @@ var mouseX = SCREEN_WIDTH * 0.5;
 var mouseY = SCREEN_HEIGHT * 0.5;
 var mouseIsDown = false;
 
+var step = 5;
+var steps = 50;
+var delay = 20;
+
 function init() {
 
   canvas = document.getElementById('lost');
 
   if (canvas && canvas.getContext) {
     context = canvas.getContext('2d');
+    
+    context.fillStyle = "tomato";
+    context.font = "10pt Helvetica";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    textSmallToBig();
 
     window.addEventListener('mousemove', documentMouseMoveHandler, false);
     window.addEventListener('mousedown', documentMouseDownHandler, false);
@@ -39,6 +49,18 @@ function init() {
 
     setInterval(loop, 1000 / 60);
   }
+}
+
+function textSmallToBig() {
+  step++;
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.save();
+  context.translate(canvas.width / 2, canvas.height / 2);
+  context.font = step + "pt Helvetica";
+  context.fillText("CLICK TO GET LOST", 0, 0);
+  context.restore();
+  if (step < steps)
+    var t = setTimeout('textSmallToBig()', 20);
 }
 
 function createParticles() {
@@ -112,7 +134,7 @@ function windowResizeHandler() {
 function loop() {
 
   if (mouseIsDown) {
-    RADIUS_SCALE += (RADIUS_SCALE_MAX / 20);
+    RADIUS_SCALE += (RADIUS_SCALE_MAX / 60);
   } else {
     RADIUS_SCALE -= (RADIUS_SCALE - RADIUS_SCALE_MIN) * (0.5);
   }
@@ -163,5 +185,7 @@ function loop() {
     context.fill();
   }
 }
+
+
 
 window.onload = init;
