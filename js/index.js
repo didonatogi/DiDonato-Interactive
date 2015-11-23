@@ -9,7 +9,7 @@ var RADIUS_SCALE = 1;
 var RADIUS_SCALE_MIN = .5;
 var RADIUS_SCALE_MAX = 3;
 
-var QUANTITY = 500;
+var QUANTITY = 1000;
 
 var canvas;
 var context;
@@ -22,6 +22,7 @@ var mouseIsDown = false;
 var step = 5;
 var steps = 50;
 var delay = 20;
+
 
 function init() {
 
@@ -50,6 +51,8 @@ function init() {
     setInterval(loop, 1000 / 60);
   }
 }
+
+
 
 function textSmallToBig() {
   step++;
@@ -134,7 +137,7 @@ function windowResizeHandler() {
 function loop() {
 
   if (mouseIsDown) {
-    RADIUS_SCALE += (RADIUS_SCALE_MAX / 60);
+    RADIUS_SCALE += (RADIUS_SCALE_MAX / 500);
   } else {
     RADIUS_SCALE -= (RADIUS_SCALE - RADIUS_SCALE_MIN) * (0.5);
   }
