@@ -3,7 +3,8 @@ var SCREEN_HEIGHT = window.innerHeight;
 
 var RADIUS = 70;
 var COLORS = ["red", "crimson", "darkred", "firebrick", "maroon", "orangered", "tomato"];
-
+var COLORSTWO = ["whitesmoke", "aqua", "blue", "yellow", "cyan", "white"];
+var COLORSTHREE = ["darkgray", "dimgray", "gainsboro", "ghostwhite", "lightslategray", "silver"];
 
 var RADIUS_SCALE = 1;
 var RADIUS_SCALE_MIN = .5;
@@ -23,6 +24,8 @@ var step = 5;
 var steps = 50;
 var delay = 20;
 
+var aPressed = false;
+var dPressed = false;
 
 function init() {
 
@@ -37,6 +40,8 @@ function init() {
     context.textBaseline = "middle";
     textSmallToBig();
 
+    document.addEventListener('keydown', keyDownHandler, false);
+    document.addEventListener('keyup', keyUpHandler, false);
     window.addEventListener('mousemove', documentMouseMoveHandler, false);
     window.addEventListener('mousedown', documentMouseDownHandler, false);
     window.addEventListener('mouseup', documentMouseUpHandler, false);
@@ -51,8 +56,6 @@ function init() {
     setInterval(loop, 1000 / 60);
   }
 }
-
-
 
 function textSmallToBig() {
   step++;
@@ -95,6 +98,23 @@ function createParticles() {
   }
 }
 
+function keyDownHandler(e) {
+        if(e.keyCode == 65) {
+            aPressed = true;
+        }
+        else if(e.keyCode == 68) {
+            dPressed = true;
+        }
+    }
+function keyUpHandler(e) {
+        if(e.keyCode == 65) {
+            aPressed = false;
+        }
+        else if(e.keyCode == 68) {
+            dPressed = false;
+        }
+    }
+
 function documentMouseMoveHandler(event) {
   mouseX = event.clientX - (window.innerWidth - SCREEN_WIDTH) * .5;
   mouseY = event.clientY - (window.innerHeight - SCREEN_HEIGHT) * .5;
@@ -134,7 +154,14 @@ function windowResizeHandler() {
   canvas.height = SCREEN_HEIGHT;
 }
 
+
 function loop() {
+
+   if(aPressed) {
+     particle.fillColor = COLOURSTWO[Math.floor(Math.random() * COLORSTWO.length)];
+   } else if(dPressed) {
+     particle.fillColor = COLOURSTHREE[Math.floor(Math.random() * COLORSTHREE.length)];
+   }
 
   if (mouseIsDown) {
     RADIUS_SCALE += (RADIUS_SCALE_MAX / 500);
@@ -186,9 +213,9 @@ function loop() {
 //context.stroke();
     context.arc(particle.position.x, particle.position.y, particle.size / 2, 0, Math.PI * 2, true);
     context.fill();
+
   }
 }
-
 
 
 window.onload = init;
