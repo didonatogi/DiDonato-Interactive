@@ -18,8 +18,8 @@ var mouseX = SCREEN_WIDTH * 0.5;
 var mouseY = SCREEN_HEIGHT * 0.5;
 var mouseIsDown = false;
 
-var step = 5;
-var steps = 50;
+var step = 10;
+var steps = 30;
 var delay = 20;
 
 var timer;
@@ -64,7 +64,7 @@ function textSmallToBig() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.save();
   context.translate(canvas.width / 2, canvas.height / 2);
-  context.font = step;
+  context.font = step + "pt Helvetica";
   context.fillText("CLICK TO WARP", 0, 0);
   context.restore();
   if (step < steps)
