@@ -33,11 +33,12 @@ function init() {
     context = canvas.getContext('2d');
     
     context.fillStyle = "white";
-    context.font = "10pt Helvetica";
+    context.font = "30pt Helvetica";
     context.textAlign = "center";
     context.textBaseline = "middle";
 
-    //textSmallToBig();
+    textSmallToBig();
+
 
 
     window.addEventListener('mousemove', documentMouseMoveHandler, false);
@@ -67,8 +68,10 @@ function textSmallToBig() {
   context.fillText("CLICK TO WARP", 0, 0);
   context.restore();
   if (step < steps)
-    var t = setTimeout('textSmallToBig()', 20);
+    var t = setTimeout('textSmallToBig()', 30);
+
 }
+
 
 function createParticles() {
   particles = [];
