@@ -3,14 +3,12 @@ var SCREEN_HEIGHT = window.innerHeight;
 
 var RADIUS = 70;
 var COLORS = ["red", "crimson", "darkred", "firebrick", "maroon", "orangered", "tomato"];
-var COLORSTWO = ["whitesmoke", "aqua", "blue", "yellow", "cyan", "white"];
-var COLORSTHREE = ["darkgray", "dimgray", "gainsboro", "ghostwhite", "lightslategray", "silver"];
 
 var RADIUS_SCALE = 1;
 var RADIUS_SCALE_MIN = .5;
 var RADIUS_SCALE_MAX = 3;
 
-var QUANTITY = 1000;
+var QUANTITY = 500;
 
 var canvas;
 var context;
@@ -24,8 +22,8 @@ var step = 5;
 var steps = 50;
 var delay = 20;
 
-var aPressed = false;
-var dPressed = false;
+var timer;
+var timerTwo;
 
 function init() {
 
@@ -34,14 +32,14 @@ function init() {
   if (canvas && canvas.getContext) {
     context = canvas.getContext('2d');
     
-    context.fillStyle = "tomato";
+    context.fillStyle = "white";
     context.font = "10pt Helvetica";
     context.textAlign = "center";
     context.textBaseline = "middle";
-    textSmallToBig();
 
-    document.addEventListener('keydown', keyDownHandler, false);
-    document.addEventListener('keyup', keyUpHandler, false);
+    //textSmallToBig();
+
+
     window.addEventListener('mousemove', documentMouseMoveHandler, false);
     window.addEventListener('mousedown', documentMouseDownHandler, false);
     window.addEventListener('mouseup', documentMouseUpHandler, false);
@@ -49,11 +47,14 @@ function init() {
     document.addEventListener('touchmove', documentTouchMoveHandler, false);
     window.addEventListener('resize', windowResizeHandler, false);
 
+
     createParticles();
 
     windowResizeHandler();
 
     setInterval(loop, 1000 / 60);
+    timer = setInterval(resizeCanvas, 20);
+    timerTwo = setInterval(newShape, 200);
   }
 }
 
@@ -62,8 +63,8 @@ function textSmallToBig() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.save();
   context.translate(canvas.width / 2, canvas.height / 2);
-  context.font = step + "pt Helvetica";
-  context.fillText("CLICK TO GET LOST", 0, 0);
+  context.font = step;
+  context.fillText("CLICK TO WARP", 0, 0);
   context.restore();
   if (step < steps)
     var t = setTimeout('textSmallToBig()', 20);
@@ -97,23 +98,6 @@ function createParticles() {
     particles.push(particle);
   }
 }
-
-function keyDownHandler(e) {
-        if(e.keyCode == 65) {
-            aPressed = true;
-        }
-        else if(e.keyCode == 68) {
-            dPressed = true;
-        }
-    }
-function keyUpHandler(e) {
-        if(e.keyCode == 65) {
-            aPressed = false;
-        }
-        else if(e.keyCode == 68) {
-            dPressed = false;
-        }
-    }
 
 function documentMouseMoveHandler(event) {
   mouseX = event.clientX - (window.innerWidth - SCREEN_WIDTH) * .5;
@@ -157,12 +141,6 @@ function windowResizeHandler() {
 
 function loop() {
 
-   if(aPressed) {
-     particle.fillColor = COLOURSTWO[Math.floor(Math.random() * COLORSTWO.length)];
-   } else if(dPressed) {
-     particle.fillColor = COLOURSTHREE[Math.floor(Math.random() * COLORSTHREE.length)];
-   }
-
   if (mouseIsDown) {
     RADIUS_SCALE += (RADIUS_SCALE_MAX / 500);
   } else {
@@ -195,8 +173,8 @@ function loop() {
     particle.position.y = particle.shift.y + Math.sin(i + particle.offset.y) * (particle.orbit * RADIUS_SCALE);
 
     //bounds
-    particle.position.x = Math.max(Math.min(particle.position.x, SCREEN_WIDTH), 0);
-    particle.position.y = Math.max(Math.min(particle.position.y, SCREEN_HEIGHT), 0);
+    particle.position.x = Math.max(Math.min(particle.position.x));
+    particle.position.y = Math.max(Math.min(particle.position.y));
 
     particle.size += (particle.targetSize - particle.size) * 0.05;
 
@@ -205,17 +183,69 @@ function loop() {
     }
 
     context.beginPath();
-    context.fillStyle = particle.fillColor;
+    context.fillStyle = "ghostwhite";
     context.strokeStyle = particle.fillColor;
     context.lineWidth = particle.size;
     context.moveTo(lp.x, lp.y);
-    context.lineTo(particle.position.x, particle.position.y);
-//context.stroke();
     context.arc(particle.position.x, particle.position.y, particle.size / 2, 0, Math.PI * 2, true);
     context.fill();
+
+    context.beginPath();
+    context.fillStyle = "red";
+    context.strokeStyle = particle.fillColor;
+    context.lineWidth = particle.size;
+    context.moveTo(lp.x / 2, lp.y / 4);
+    context.arc(particle.position.x / 4, particle.position.y / 4, particle.size / 4, 0, .05, true);
+    context.fill();
+
+    context.beginPath();
+    context.fillStyle = "silver";
+    context.strokeStyle = particle.fillColor;
+    context.lineWidth = particle.size;
+    context.moveTo(lp.x * 2, lp.y * 2);
+    context.rect(particle.position.x * 2, particle.position.y * 2 , 10, 10);
+    context.fill();
+
+    context.beginPath();
+    context.fillStyle = "darkslategray";
+    context.strokeStyle = particle.fillColor;
+    context.lineWidth = particle.size;
+    context.moveTo(lp.x * 3 + 10, lp.y * 3 + 70);
+    context.lineTo(lp.x * 3 + 10, lp.y * 3 + 30);
+    context.lineTo(lp.x * 3 + 30, lp.y * 3 + 30);
+    context.lineTo(lp.x * 3 + 30, lp.y * 3 + 50);
+    context.lineTo(lp.x * 3 + 50, lp.y * 3 + 50);
+    context.lineTo(lp.x * 3 + 50, lp.y * 3 + 70);
+    context.lineTo(lp.x * 3 + 10, lp.y * 3 + 70);
+    context.lineTo(lp.x * 3 + 10, lp.y * 3 + 70);
+    context.closePath();
+    context.fill();
+
+    context.beginPath();
+    context.fillStyle = "slategray";
+    context.strokeStyle = particle.fillColor;
+    context.lineWidth = particle.size;     
+    context.moveTo(lp.x * 4 + 20, lp.y * 4 + 20);
+    context.lineTo(lp.x * 4 + 20, lp.y * 4 + 40);
+    context.lineTo(lp.x * 4 + 40, lp.y * 4 + 40);
+    context.lineTo(lp.x * 4 + 40, lp.y * 4 + 60);
+    context.lineTo(lp.x * 4 + 60, lp.y * 4 + 60);
+    context.lineTo(lp.x * 4 + 60, lp.y * 4 + 80);
+    context.lineTo(lp.x * 4 + 80, lp.y * 4 + 80);
+    context.lineTo(lp.x * 4 + 80, lp.y * 4 + 40);
+    context.lineTo(lp.x * 4 + 60, lp.y * 4 + 40);
+    context.lineTo(lp.x * 4 + 60, lp.y * 4 + 20);
+    context.lineTo(lp.x * 4 + 20, lp.y * 4 + 20);
+    context.closePath();
+    context.fill();
+
 
   }
 }
 
+  function degreesToRadians(degrees) {
+    //converts from degrees to radians and returns
+    return (degrees * Math.PI)/180;
+  }
 
 window.onload = init;
